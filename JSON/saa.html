@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Säätiedot</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            max-width: 700px;
+        }
+        .weather-info {
+            padding: 10px;
+            width: 50%;
+            margin-left: 0px; 
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Etusivu</a></li>
+            <li><a href="kurssi.html">Kurssi</a></li>
+            <li><a href="toteutus.html">Toteutus</a></li>
+            <li><a href="liikennekamera.html">Liikennekamera</a></li>
+            <li><a href="junat.html">Junat</a></li>
+            <li><a href="tapahtumat.html">Tapahtumat</a></li>
+            <li><a href="saa.html">Sää</a></li>
+        </ul>
+    </nav>
+
+    <h1>Sää - siitä on aina jotain kerrottavaa</h1>
+    <p>Millainen sää Helsingissä on? Entä Tampereella?</p>
+
+    <div class="container">
+        <div id="helsinkiWeather" class="weather-info"></div>
+        <div id="tampereWeather" class="weather-info"></div>
+    </div>
+
+    <script>
+        const keyCode = '665ecd56dfc08dbb50feb8b8f5034e28'; 
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lang=fi&q=helsinki&units=metric&APPID=${keyCode}`)
+        .then(response => response.json())
+        .then(data => {
+            saa(data, 'Helsinki', 'helsinkiWeather');
+        })
+        .catch(error => document.getElementById("helsinkiWeather").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>");
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lang=fi&q=tampere&units=metric&APPID=${keyCode}`)
+        .then(response => response.json())
+        .then(data => {
+            saa(data, 'Tampere', 'tampereWeather');
+        })
+        .catch(error => document.getElementById("tampereWeather").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>");
+
+        function saa(data, city, elementId) {
+            var teksti = "";
+            teksti += "<ul>";
+            teksti += "<li>kaupunki: " + data.name + "</li>";
+            teksti += "<li>kuvaus: " + data.weather[0].description + "</li>";
+            teksti += "<li>lämpötila: " + data.main.temp + " &deg;C</li>";
+            teksti += "<li>tuulen nopeus: " + data.wind.speed + " m/s</li>";
+            var kuva = 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png';
+            teksti += "<img src='" + kuva + "' alt='kuva'>";
+            teksti += "</ul>";
+            document.getElementById(elementId).innerHTML = teksti;
+        }
+    </script>
+</body>
+</html>

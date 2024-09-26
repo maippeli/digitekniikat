@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liikennekamera</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Etusivu</a></li>
+            <li><a href="kurssi.html">Kurssi</a></li>
+            <li><a href="toteutus.html">Toteutus</a></li>
+            <li><a href="liikennekamera.html">Liikennekamera</a></li>
+            <li><a href="junat.html">Junat</a></li>
+            <li><a href="tapahtumat.html">Tapahtumat</a></li>
+            <li><a href="saa.html">Sää</a></li>
+        </ul>
+    </nav>
+
+    <h1>Mennäänkö autolla Tampereelle?</h1>
+    <p>Minkälainen keli siellä on?</p>
+
+    <div id="vastaus"></div>
+
+    <script>
+        fetch('https://tie.digitraffic.fi/api/weathercam/v1/stations/C04507/data')
+        .then(response => response.json())
+        .then(data => {
+            let teksti = '';
+
+            if (data.presets && data.presets.length > 0) {
+                for (let i = 0; i < data.presets.length; i++) {
+                    let preset = data.presets[i];
+                    let kuvaURL = `https://weathercam.digitraffic.fi/${preset.id}.jpg`;
+                    let paivays = preset.measuredTime
+
+                    teksti = teksti + `<p>${paivays} - <img src="${kuvaURL}" alt="Liikennekamera kuva"></p>`;
+                }
+            } else {
+                teksti = "<p>Ei kameradataa saatavilla</p>";
+            }
+
+            document.getElementById("vastaus").innerHTML = teksti;
+        })
+        .catch(error => {
+            document.getElementById("vastaus").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
+            console.error('Virhe haettaessa dataa:', error);
+        });
+    </script>
+</body>
+</html>

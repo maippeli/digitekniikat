@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tampereen Tapahtumat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Etusivu</a></li>
+            <li><a href="kurssi.html">Kurssi</a></li>
+            <li><a href="toteutus.html">Toteutus</a></li>
+            <li><a href="liikennekamera.html">Liikennekamera</a></li>
+            <li><a href="junat.html">Junat</a></li>
+            <li><a href="tapahtumat.html">Tapahtumat</a></li>
+            <li><a href="saa.html">Sää</a></li>
+        </ul>
+    </nav>
+    <div id="vastaus"></div>
+
+    <script>
+        fetch('https://api.visittampere.com/api/v1/visittampere/event/published/all/?format=json&lang=fi')
+        .then(function (response) { 
+            return response.json(); 
+        })
+        .then(function (responseJson) {
+            tapahtumat(responseJson);
+        })
+        .catch(function (error) { 
+            document.getElementById("vastaus").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>" + error; 
+        });
+
+        function tapahtumat(data) {
+            var teksti = "<h1>Tampereella tapahtuu</h1>";
+            for (var i = 0; i < data.length; i++) {
+                teksti = teksti + "<h3>" + data[i].title + "</h3>";
+                teksti = teksti + "<p>" + data[i].description + "</p>";
+                teksti = teksti + "<p><a href='" + data[i].url + "'>" + data[i].url + "</a></p>";
+            }
+            document.getElementById("vastaus").innerHTML = teksti;
+        }
+    </script>
+</body>
+</html>
