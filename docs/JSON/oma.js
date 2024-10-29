@@ -1,4 +1,4 @@
-fetch('https://run.mocky.io/v3/046bc417-7a5e-4ac0-941b-62d44b4f5adc')
+fetch('https://run.mocky.io/v3/4097a58f-23f3-4aa0-9710-d836917dc916')
 
 .then(function (response) {
     return response.json();
